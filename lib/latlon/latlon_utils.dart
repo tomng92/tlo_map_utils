@@ -17,7 +17,7 @@ class LatLonUtils {
   /**
    * Compute the square bounding box at a given position.
    * Returns an array of 4 floats lat1, lon1, lat2, lon2. ([Float32List] in typed_data seems good to use for this.)
-   * [distanceSpanned] is in kilometers.
+   * [distanceSpanned] is in kilometers. It is the dimension of the bounding box square.
    *
    * "Since the circumference of the Earth is roughly 25,000 miles,
    *  the length of each degree of latitude is about 111km ( 1/360 of 25,000 miles).
@@ -42,12 +42,12 @@ class LatLonUtils {
    * Resources:
    *  - convert min deg secs to decimal: 
    *     1) http://andrew.hedges.name/experiments/convert_lat_long/
-   *     2) http://answers.yahoo.com/question/index?qid=20090115174952AAHR72i .. nice my friend
+   *     2) http://blog.sethladd.com/2011/12/lists-and-arrays-in-dart.html .. nice my friend
    */
-  static List<LatLon> getBoundingBox(num lat, num lon, {num distanceSpanned: 1000}) {
+  static Rectangle getBoundingBox(num lat, num lon, {num distanceSpanned: 1000}) {
     num delLat = LatLonUtils._deltaLatitude(distanceSpanned);
     num delLon = LatLonUtils.deltaLongitude(lat, distanceSpanned);
-    return [new LatLon(lat - delLat/2, lon - delLon/2), new LatLon(lat - delLat/2, lon - delLon/2)];
+    return new Rectangle(new LatLon(lat - delLat/2, lon - delLon/2), new LatLon(lat - delLat/2, lon - delLon/2));
   }
   
   /**

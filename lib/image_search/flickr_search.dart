@@ -37,7 +37,7 @@ const String BIG_SUFFIX =       'b';
 /**
  * Contains info about a photo
  */
-class Photo {
+class PhotoFlickr {
   String id, owner, secret, title;
   String server; 
   int farm, ispublic, isfriend, isfamily;
@@ -64,7 +64,7 @@ class Photo {
     return 'http://farm${farm}.static.flickr.com/${server}/${id}_${secret}_${suffix}.jpg';
   }
 
-  Photo.fromMap(Map<String, dynamic> map) {
+  PhotoFlickr.fromMap(Map<String, dynamic> map) {
     if (map.containsKey('id')) id = map['id']; 
     if (map.containsKey('owner'))  owner = map['owner'];
     if (map.containsKey('secret')) secret = map['secret'];
@@ -102,7 +102,7 @@ class FlickrSearch {
    */
   Completer myCompleter;
   
-  Future<List<Photo>> searchByLatLonUsingFuture(String lat, String lon, int radius) {
+  Future<List<PhotoFlickr>> searchByLatLonUsingFuture(String lat, String lon, int radius) {
     var url = '${_buildSearchUrl(lat, lon, radius)}';
     var req = new HttpRequest();
     
@@ -131,7 +131,7 @@ class FlickrSearch {
      */
     if (req.readyState == HttpRequest.DONE && req.status == 200) {
       var data = parse(req.responseText);
-      List<Photo> photos = _parseResponse2(data);
+      List<PhotoFlickr> photos = _parseResponse2(data);
       if (photos != null) {
         myCompleter.complete(photos);
       } else {
@@ -140,7 +140,7 @@ class FlickrSearch {
     }
   }
 
-  List<Photo> _parseResponse2(Map<String, dynamic> data) {
+  List<PhotoFlickr> _parseResponse2(Map<String, dynamic> data) {
      if (data.containsKey('stat')) {
       if (data['stat'] == STAT_OK) {
         if (data.containsKey('photos')) {
@@ -151,7 +151,7 @@ class FlickrSearch {
             var photoList = [];
             var photo;
             while (it.moveNext()) {
-              photo = new Photo.fromMap(it.current);
+              photo = new PhotoFlickr.fromMap(it.current);
               photoList.add(photo);
             }
 
